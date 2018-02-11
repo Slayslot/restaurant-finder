@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import './home.css';
 
 class Home extends Component {
@@ -9,8 +10,10 @@ class Home extends Component {
         this.locationKeyUp = this.locationKeyUp.bind(this);
         this.searchLocation = this.searchLocation.bind(this);
         this.handleGeocoder = this.handleGeocoder.bind(this);
+        this.renderError = this.renderError.bind(this);
         this.state = {
-            location: ''
+            location: '',
+            error: null
         }
     }
 
@@ -22,7 +25,7 @@ class Home extends Component {
     }
 
     locationChange(event) {
-        this.setState({ location: event.target.value });
+        this.setState({ location: event.target.value, error: null });
     }
 
     locationKeyUp(event) {
@@ -44,7 +47,15 @@ class Home extends Component {
         if (status === google.maps.GeocoderStatus.OK) {
             updateLocation(result[0].geometry.location.lat(), result[0].geometry.location.lng());
         } else {
+            this.setState({ error: status });
             console.log('Geocode was not successful for the following reason: ' + status);
+        }
+    }
+
+    renderError() {
+        const { error } = this.state;
+        if(error === null) { return null } else {
+            return (<p className='error'>Unable to find location: {error}</p>);
         }
     }
 
@@ -66,10 +77,16 @@ class Home extends Component {
                                onKeyUp={this.locationKeyUp} />
                         <button onClick={this.searchLocation}>Search</button>
                     </div>
+                    {this.renderError()}
                 </div>
             </div>
         );
     }
 }
+
+Home.propTypes = {
+    google: PropTypes.object,
+    updateLocation: PropTypes.func
+};
 
 export default Home;

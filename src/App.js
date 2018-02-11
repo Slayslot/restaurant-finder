@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import Home from './home/home';
 import axios from 'axios';
+import Map from './map/map';
 import { GoogleApiWrapper } from 'google-maps-react';
 import './App.css';
 
@@ -8,11 +10,16 @@ class App extends Component {
     constructor(props) {
         super(props);
         this.updateLocation = this.updateLocation.bind(this);
+        this.resetState = this.resetState.bind(this);
         this.state = {
             lat: null,
             long: null,
             zomato: null
         }
+    }
+
+    resetState() {
+        this.setState({ lat: null, long: null, zomato: null });
     }
 
     updateLocation(lat, long) {
@@ -32,17 +39,23 @@ class App extends Component {
 
     render() {
         const { lat, long } = this.state;
+        const { google } = this.props;
         if(lat === null && long === null) {
             return (
-                <Home updateLocation={this.updateLocation} google={this.props.google}/>
+                <Home updateLocation={this.updateLocation} google={google}/>
             );
         } else {
+            const { zomato } = this.state;
             return (
-                <div>{this.state.lat}, {this.state.long}</div>
+                <Map google={google} lat={lat} long={long} zomato={zomato} reset={this.resetState}/>
             )
         }
     }
 }
+
+App.propTypes = {
+    google: PropTypes.object
+};
 
 export default GoogleApiWrapper({
     apiKey: 'AIzaSyAAdpK2bM1BNLlbBxRR86P4DLgGWWmTZt0'
