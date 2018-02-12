@@ -58,6 +58,10 @@
       overflow:hidden;
       cursor: pointer;
       border-radius: 30px;
+
+      &:focus {
+        outline: 0;
+      }
     }
 
     .error {
@@ -87,6 +91,10 @@
       border-top-right-radius: 5px;
       border-bottom-right-radius: 5px;
       border-left: 0;
+
+      &:focus {
+        outline: 0;
+      }
     }
   }
 }
