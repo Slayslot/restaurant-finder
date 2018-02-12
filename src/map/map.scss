@@ -32,10 +32,10 @@
     height: calc(100vh - 50px);
 
     .iw-closebutton {
-      right: 38px;
+      right: 38px !important;
 
       @include media-max-width(600px) {
-        right: 0;
+        right: 0 !important;
       }
     }
 
