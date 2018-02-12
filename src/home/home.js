@@ -21,6 +21,13 @@ class Home extends Component {
         const { updateLocation } = this.props;
         navigator.geolocation.getCurrentPosition(position => {
             updateLocation(position.coords.latitude, position.coords.longitude);
+        },
+        () => {
+            this.setState({ error: 'DETECT_FAIL' });
+        },
+        {
+            enableHighAccuracy: true,
+            timeout : 5000
         });
     }
 
@@ -60,7 +67,8 @@ class Home extends Component {
                 .set(INVALID_REQUEST, 'Invalid request.')
                 .set(UNKNOWN_ERROR, 'Something went wrong. Please try again.')
                 .set(ERROR, 'Unable to connect to the server. Please try again.')
-                .set('ZOMATO_ERROR', 'Unable to fetch the restaurants. Please try again.');
+                .set('ZOMATO_ERROR', 'Unable to fetch the restaurants. Please try again.')
+                .set('DETECT_FAIL', 'Unable to detect your location.');
         }
         if(this.props.error === null && error !== null) {
             this.setState({ error });
