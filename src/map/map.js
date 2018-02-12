@@ -34,7 +34,7 @@ class Map extends Component {
             const { address, latitude, longitude } = location;
             const { aggregate_rating, rating_color, votes } = user_rating;
             const contentString = `<div class="restaurant-content">
-                <img class="restaurant-background" src='${featured_image}'>
+                <img class="restaurant-background" src='${featured_image}?v=${Math.random()}'>
                 <h1 class="restaurant-name">${name}</h1>
                 <div class="rating">
                     <div class="rating-box" style="background-color: #${rating_color}">
@@ -79,7 +79,7 @@ class Map extends Component {
                 position: { lat: Number(latitude), lng: Number(longitude) },
                 map: newMap,
                 title: name,
-                icon: { url: 'http://www.myiconfinder.com/uploads/iconsets/32-32-6096188ce806c80cf30dca727fe7c237.png' }
+                icon: { url: 'https://i.imgur.com/LbW1kr8.png' }
             });
             restaurantMarker.addListener('click', () => {
                 restaurantInfo.open(newMap, restaurantMarker);
