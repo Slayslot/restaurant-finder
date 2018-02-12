@@ -26,6 +26,9 @@ class Home extends Component {
 
     locationChange(event) {
         this.setState({ location: event.target.value, error: null });
+        if(this.props.error !== null) {
+            this.props.resetError();
+        }
     }
 
     locationKeyUp(event) {
@@ -42,6 +45,28 @@ class Home extends Component {
         }, this.handleGeocoder);
     }
 
+    componentWillReceiveProps({ google, error }) {
+        this.errorMap = new Map();
+        if(this.props.google === undefined && google !== undefined) {
+            const { ZERO_RESULTS,
+                OVER_QUERY_LIMIT,
+                REQUEST_DENIED,
+                INVALID_REQUEST,
+                UNKNOWN_ERROR,
+                ERROR } = google.maps.GeocoderStatus;
+            this.errorMap.set(ZERO_RESULTS, 'Unable to find the location')
+                .set(OVER_QUERY_LIMIT, 'Unable to process the request.')
+                .set(REQUEST_DENIED, 'Request denied.')
+                .set(INVALID_REQUEST, 'Invalid request.')
+                .set(UNKNOWN_ERROR, 'Something went wrong. Please try again.')
+                .set(ERROR, 'Unable to connect to the server. Please try again.')
+                .set('ZOMATO_ERROR', 'Unable to fetch the restaurants. Please try again.');
+        }
+        if(this.props.error === null && error !== null) {
+            this.setState({ error });
+        }
+    }
+
     handleGeocoder(result, status) {
         const { google, updateLocation } = this.props;
         if (status === google.maps.GeocoderStatus.OK) {
@@ -55,7 +80,7 @@ class Home extends Component {
     renderError() {
         const { error } = this.state;
         if(error === null) { return null } else {
-            return (<p className='error'>Unable to find location: {error}</p>);
+            return (<p className='error'>{this.errorMap.get(error)}</p>);
         }
     }
 
@@ -86,7 +111,8 @@ class Home extends Component {
 
 Home.propTypes = {
     google: PropTypes.object,
-    updateLocation: PropTypes.func
+    updateLocation: PropTypes.func,
+    resetError: PropTypes.func
 };
 
 export default Home;

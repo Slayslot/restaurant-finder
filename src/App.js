@@ -11,15 +11,21 @@ class App extends Component {
         super(props);
         this.updateLocation = this.updateLocation.bind(this);
         this.resetState = this.resetState.bind(this);
+        this.resetError = this.resetError.bind(this);
         this.state = {
             lat: null,
             long: null,
-            zomato: null
+            zomato: null,
+            error: null
         }
     }
 
     resetState() {
         this.setState({ lat: null, long: null, zomato: null });
+    }
+
+    resetError() {
+        this.setState({ error: null });
     }
 
     updateLocation(lat, long) {
@@ -32,22 +38,28 @@ class App extends Component {
             .then((response) => {
                 this.setState({ lat, long, zomato: response.data });
             })
-            .catch((error) => {
-                console.log(error);
+            .catch(() => {
+                this.setState({ error: 'ZOMATO_ERROR'});
             })
     }
 
     render() {
-        const { lat, long } = this.state;
+        const { lat, long, error } = this.state;
         const { google } = this.props;
         if(lat === null && long === null) {
             return (
-                <Home updateLocation={this.updateLocation} google={google}/>
+                <Home updateLocation={this.updateLocation}
+                      google={google}
+                      error={error}
+                      resetError={this.resetError} />
             );
         } else {
             const { zomato } = this.state;
             return (
-                <Map google={google} lat={lat} long={long} zomato={zomato} reset={this.resetState}/>
+                <Map google={google}
+                     lat={lat} long={long}
+                     zomato={zomato}
+                     reset={this.resetState} />
             )
         }
     }
