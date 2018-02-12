@@ -93,12 +93,13 @@ class Map extends Component {
                     const iwBackground = iwOuter.previousSibling;
                     const iwCloseBtn = iwOuter.nextElementSibling;
 
+                    iwOuter.children[0].style.maxWidth = '350px';
                     iwBackground.children[1].style.display = 'none';
                     iwBackground.children[3].style.display = 'none';
                     iwBackground.children[2].querySelector('div').children[0].style.boxShadow = 'rgba(72, 181, 233, 0.6) 0px 1px 6px';
                     iwBackground.children[2].querySelector('div').children[0].style.zIndex =  '1';
+                    iwCloseBtn.className += 'iw-closebutton';
                     iwCloseBtn.style.opacity = '1';
-                    iwCloseBtn.style.right = '38px';
                     iwCloseBtn.style.top = '3px';
                     iwCloseBtn.style.border = '5px solid #424242';
                     iwCloseBtn.style.borderRadius = '13px';
