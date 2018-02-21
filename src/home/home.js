@@ -2,6 +2,36 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import './home.css';
 
+const addAutoComplete = (google, input, renderError, updateLocation) => {
+    const autoComplete = new google.maps.places.Autocomplete(input);
+    autoComplete.addListener('place_changed', () => {
+        const place = autoComplete.getPlace();
+        if (!place.geometry) {
+            const { ZERO_RESULTS } = google.maps.GeocoderStatus;
+            renderError(ZERO_RESULTS);
+        } else {
+            updateLocation(place.geometry.location.lat(), place.geometry.location.lng());
+        }
+    });
+};
+
+const setErrorMap = (google, errorMap) => {
+    const { ZERO_RESULTS,
+        OVER_QUERY_LIMIT,
+        REQUEST_DENIED,
+        INVALID_REQUEST,
+        UNKNOWN_ERROR,
+        ERROR } = google.maps.GeocoderStatus;
+    errorMap.set(ZERO_RESULTS, 'Unable to find the location')
+        .set(OVER_QUERY_LIMIT, 'Unable to process the request.')
+        .set(REQUEST_DENIED, 'Request denied.')
+        .set(INVALID_REQUEST, 'Invalid request.')
+        .set(UNKNOWN_ERROR, 'Something went wrong. Please try again.')
+        .set(ERROR, 'Unable to connect to the server. Please try again.')
+        .set('ZOMATO_ERROR', 'Unable to fetch the restaurants. Please try again.')
+        .set('DETECT_FAIL', 'Unable to detect your location.');
+};
+
 class Home extends Component {
     constructor(props) {
         super(props);
@@ -11,6 +41,7 @@ class Home extends Component {
         this.searchLocation = this.searchLocation.bind(this);
         this.handleGeocoder = this.handleGeocoder.bind(this);
         this.renderError = this.renderError.bind(this);
+        this.errorMap = new Map();
         this.state = {
             location: '',
             error: null
@@ -52,23 +83,19 @@ class Home extends Component {
         }, this.handleGeocoder);
     }
 
-    componentWillReceiveProps({ google, error }) {
+    componentDidMount() {
+        const { google, updateLocation } = this.props;
+        if(google !== undefined) {
+            setErrorMap(google, this.errorMap);
+            addAutoComplete(google, this.input, this.renderError, updateLocation);
+        }
+     }
+
+    componentWillReceiveProps({ google, error, updateLocation }) {
         this.errorMap = new Map();
         if(this.props.google === undefined && google !== undefined) {
-            const { ZERO_RESULTS,
-                OVER_QUERY_LIMIT,
-                REQUEST_DENIED,
-                INVALID_REQUEST,
-                UNKNOWN_ERROR,
-                ERROR } = google.maps.GeocoderStatus;
-            this.errorMap.set(ZERO_RESULTS, 'Unable to find the location')
-                .set(OVER_QUERY_LIMIT, 'Unable to process the request.')
-                .set(REQUEST_DENIED, 'Request denied.')
-                .set(INVALID_REQUEST, 'Invalid request.')
-                .set(UNKNOWN_ERROR, 'Something went wrong. Please try again.')
-                .set(ERROR, 'Unable to connect to the server. Please try again.')
-                .set('ZOMATO_ERROR', 'Unable to fetch the restaurants. Please try again.')
-                .set('DETECT_FAIL', 'Unable to detect your location.');
+            setErrorMap(google, this.errorMap);
+            addAutoComplete(google, this.input, this.renderError, updateLocation);
         }
         if(this.props.error === null && error !== null) {
             this.setState({ error });
@@ -106,6 +133,7 @@ class Home extends Component {
                                name="location"
                                value={location}
                                placeholder="Enter your location"
+                               ref={node => this.input = node}
                                onChange={this.locationChange}
                                onKeyUp={this.locationKeyUp} />
                         <button onClick={this.searchLocation}>Search</button>
