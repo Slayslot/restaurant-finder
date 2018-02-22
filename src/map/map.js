@@ -17,7 +17,7 @@ class Map extends Component {
         const newMarker = new maps.Marker({
             position: { lat: lat, lng: long },
             map: newMap,
-            icon: { url: 'https://cdn0.iconfinder.com/data/icons/small-n-flat/24/678111-map-marker-32.png'}
+            icon: { url: 'https://i.imgur.com/yQaKzTj.png' }
         });
         newMarker.setMap(newMap);
         zomato.nearby_restaurants.forEach(({ restaurant }) => {
@@ -79,7 +79,7 @@ class Map extends Component {
                 position: { lat: Number(latitude), lng: Number(longitude) },
                 map: newMap,
                 title: name,
-                icon: { url: 'https://i.imgur.com/LbW1kr8.png' }
+                icon: { url: 'https://i.imgur.com/g0c8LxG.png' }
             });
             restaurantMarker.addListener('click', () => {
                 restaurantInfo.open(newMap, restaurantMarker);
