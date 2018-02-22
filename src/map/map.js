@@ -20,7 +20,9 @@ class Map extends Component {
             icon: { url: 'https://i.imgur.com/yQaKzTj.png' }
         });
         newMarker.setMap(newMap);
-        zomato.nearby_restaurants.forEach(({ restaurant }) => {
+        let infoWindows = [];
+        let mapMarkers = [];
+        zomato.nearby_restaurants.forEach(({ restaurant }, index) => {
             const { featured_image,
                 name,
                 cuisines,
@@ -70,24 +72,31 @@ class Map extends Component {
                 </div>
                 </div>`;
 
-            var restaurantInfo = new maps.InfoWindow({
+            infoWindows = infoWindows.concat(new maps.InfoWindow({
                 content: contentString,
                 maxWidth: 350,
-            });
+            }));
 
-            const restaurantMarker = new maps.Marker({
+            mapMarkers = mapMarkers.concat(new maps.Marker({
                 position: { lat: Number(latitude), lng: Number(longitude) },
                 map: newMap,
                 title: name,
                 icon: { url: 'https://i.imgur.com/g0c8LxG.png' }
-            });
-            restaurantMarker.addListener('click', () => {
-                restaurantInfo.open(newMap, restaurantMarker);
+            }));
+            mapMarkers[index].addListener('click', () => {
+                infoWindows[index].open(newMap, mapMarkers[index]);
+                infoWindows.forEach((infoWindow, i) => {
+                    if(i !== index) {
+                        infoWindow.close();
+                    }
+                })
             });
             maps.event.addListener(newMap, 'click', () => {
-                restaurantInfo.close();
+                infoWindows.forEach((infoWindow) => {
+                    infoWindow.close();
+                });
             });
-            maps.event.addListener(restaurantInfo, 'domready', () => {
+            maps.event.addListener(infoWindows[index], 'domready', () => {
                 const iwOuters = document.querySelectorAll('.gm-style-iw');
                 iwOuters.forEach((iwOuter) => {
                     const iwBackground = iwOuter.previousSibling;
@@ -106,7 +115,7 @@ class Map extends Component {
                     iwCloseBtn.style.transition = 'opacity 100ms ease-in-out';
                 });
             });
-            restaurantMarker.setMap(newMap);
+            mapMarkers[index].setMap(newMap);
         });
     }
 
