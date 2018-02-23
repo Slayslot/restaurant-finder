@@ -17,6 +17,7 @@ class Map extends Component {
         const newMarker = new maps.Marker({
             position: { lat: lat, lng: long },
             map: newMap,
+            title: 'You are here',
             icon: { url: 'https://i.imgur.com/yQaKzTj.png' }
         });
         newMarker.setMap(newMap);
@@ -46,8 +47,8 @@ class Map extends Component {
                 </div>
                 <div class="main-content">
                 <div class="actions">
-                    <a target="_blank" href="${menu_url}">Open Menu</a>
-                    <a target="_blank" href="${photos_url}">Open Photos</a>
+                    <a target="_blank" href="${menu_url}">View Menu</a>
+                    <a target="_blank" href="${photos_url}">View Photos</a>
                 </div>
                 <div class="availability">
                     <p>
@@ -107,6 +108,7 @@ class Map extends Component {
                     iwBackground.children[3].style.display = 'none';
                     iwBackground.children[2].querySelector('div').children[0].style.boxShadow = 'rgba(72, 181, 233, 0.6) 0px 1px 6px';
                     iwBackground.children[2].querySelector('div').children[0].style.zIndex =  '1';
+                    iwBackground.children[2].querySelector('div').nextElementSibling.children[0].style.zIndex =  '1';
                     iwCloseBtn.className += 'iw-closebutton';
                     iwCloseBtn.style.opacity = '1';
                     iwCloseBtn.style.top = '3px';

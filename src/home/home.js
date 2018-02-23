@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import NavigateIcon from '../images/navigate.svg';
+import SearchIcon from '../images/search.svg';
 import './home.css';
 
 const addAutoComplete = (google, input, renderError, updateLocation) => {
@@ -126,7 +128,10 @@ class Home extends Component {
                 <h1 className="title">Restaurant Finder</h1>
                 <div className="location-container">
                     <button className="near-me"
-                            onClick={this.detectLocation}>Find near me</button>
+                            onClick={this.detectLocation}>
+                        <img src={NavigateIcon} />
+                        Find near me
+                    </button>
                     <p className="or-divider">OR</p>
                     <div className="input-container">
                         <input type="text"
@@ -136,7 +141,9 @@ class Home extends Component {
                                ref={node => this.input = node}
                                onChange={this.locationChange}
                                onKeyUp={this.locationKeyUp} />
-                        <button onClick={this.searchLocation}>Search</button>
+                        <button onClick={this.searchLocation}>
+                            <img src={SearchIcon} />
+                        </button>
                     </div>
                     {this.renderError()}
                 </div>

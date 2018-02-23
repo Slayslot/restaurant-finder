@@ -34,7 +34,7 @@
     .iw-closebutton {
       right: 38px !important;
 
-      @include media-max-width(600px) {
+      @include media-max-width(325px) {
         right: 0 !important;
       }
     }
@@ -65,6 +65,10 @@
           width: $nonmobile-igw;
           height: 100px;
           object-fit: cover;
+
+          @include media-max-width(600px) {
+            width: $mobile-igw;
+          }
         }
 
         .restaurant-name {
